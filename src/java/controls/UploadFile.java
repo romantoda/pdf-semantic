@@ -37,8 +37,8 @@ import sun.misc.IOUtils;
 
 
 //@WebServlet("/uploadServlet")
-//@MultipartConfig(maxFileSize = 16177215)
-@MultipartConfig(location=myObjects.Settings.TEMP_FOLDER, maxFileSize = 10485760L)
+//@MultipartConfig(location=myObjects.Settings.TEMP_FOLDER, maxFileSize = 10485760L)
+@MultipartConfig(maxFileSize = 10485760L)
 
 /**
  *
@@ -112,7 +112,6 @@ public class UploadFile extends HttpServlet {
             String fileString = ""; //readFile(txtFileName, StandardCharsets.UTF_8);            
             
             // init pdfix
-            
             pdfix pfix = new pdfix();
             String s = pfix.PdfGetLastError();
             pfix.PdfInitLibrary();
