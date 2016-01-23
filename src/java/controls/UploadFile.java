@@ -31,7 +31,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
-import pdfix.pdfixlib.pdfix;
+import pdfix.pdfixlib.*;
 import sun.misc.IOUtils;
 
 
@@ -45,7 +45,6 @@ import sun.misc.IOUtils;
  * @author Roman Toda <roman.toda@gmail.com>
  */
 public class UploadFile extends HttpServlet {
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -114,7 +113,6 @@ public class UploadFile extends HttpServlet {
             // init pdfix
             
             pdfix pfix = new pdfix();
-            String s = pfix.PdfGetLastError();
             pfix.PdfInitLibrary();
             long doc_pdfix = pfix.PdfDocOpen(absoluteFileName, "");
             if (doc_pdfix != 0) {
@@ -123,23 +121,25 @@ public class UploadFile extends HttpServlet {
                 for (int pagenum = 0; pagenum<num_pages; pagenum++)
                 {
                     long page_pdfix = pfix.PdfDocAcquirePage(doc_pdfix, pagenum);
-                    long pagemap_pdfix = pfix.PdfPageAcquirePageMap(page_pdfix, 0, 0, 0);
+                    long pagemap_pdfix = pfix.PdfPageAcquirePageMap(page_pdfix, 0, 0);
                     int count = pfix.PdfPageMapGetNumElements(pagemap_pdfix);
                     String pageString = ""; 
 
                     for (int element = 0; element < count; element++) {
                         long elem_pdfix = pfix.PdfPageMapGetElement(pagemap_pdfix, element);
-                        long type = pfix.PdeElementGetType(elem_pdfix);
-                        if (type == 3) {                   
-                            String str = pfix.PdeTextGetText(elem_pdfix);
-                            if (! str.isEmpty()) {
-                                fileString+=str;
-                                pageString+=str;
-                                // fingerprint for paragraph
-                                if (CommitToDB(conn, cort, str, fileID, pagenum, element)>0)
-                                    CommitTextToDB( conn, fileID, fileName, str, pagenum, element);
-                            }
-                       }
+                        ProcessElement(pfix, elem_pdfix, fileString, pageString, 
+                            conn, cort, fileID, pagenum, element, fileName);
+//                        long type = pfix.PdeElementGetType(elem_pdfix);
+//                        if (type == 3) {                   
+//                            String str = pfix.PdeTextGetText(elem_pdfix);
+//                            if (! str.isEmpty()) {
+//                                fileString+=str;
+//                                pageString+=str;
+//                                // fingerprint for paragraph
+//                                if (CommitToDB(conn, cort, str, fileID, pagenum, element)>0)
+//                                    CommitTextToDB( conn, fileID, fileName, str, pagenum, element);
+//                            }
+//                       }
                     }
                     
                     // fingerprint for whole page 
@@ -155,9 +155,35 @@ public class UploadFile extends HttpServlet {
                     CommitTextToDB( conn, fileID, fileName, fileString, -1, -1);
                 pfix.PdfDocClose(doc_pdfix);
             }    
-            s = pfix.PdfGetLastError();
+            String s = pfix.PdfGetLastError();
             pfix.PdfDestroyLibrary();        
         }
+    }
+    
+    void ProcessElement(pdfix pfix, long elem_pdfix, String fileString, String pageString, 
+            Connection conn, PDF_Cortical cort, int fileID, int pagenum, 
+            int element, String fileName) {
+      long type = pfix.PdeElementGetType(elem_pdfix);
+      if (type == 3) {                   
+        String str = pfix.PdeTextGetText(elem_pdfix);
+        if (! str.isEmpty()) {
+            try {
+                fileString+=str;
+                pageString+=str;
+                // fingerprint for paragraph
+                if (CommitToDB(conn, cort, str, fileID, pagenum, element)>0)
+                    CommitTextToDB( conn, fileID, fileName, str, pagenum, element);
+            } catch (ApiException ex) {
+                Logger.getLogger(UploadFile.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+      }
+      long num_childs = pfix.PdeElementGetNumChildren(elem_pdfix);
+      for (int j = 0; j < num_childs; j++) {
+        long elem2 = pfix.PdeElementGetChild(elem_pdfix, j);
+        ProcessElement(pfix, elem_pdfix, fileString, pageString, 
+            conn, cort, fileID, pagenum, element, fileName);
+      }      
     }
 
     
