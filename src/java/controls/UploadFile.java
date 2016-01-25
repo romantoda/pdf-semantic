@@ -109,7 +109,9 @@ public class UploadFile extends HttpServlet {
             String absoluteFileName = file.toPath().toString();
             
             String fileString = ""; //readFile(txtFileName, StandardCharsets.UTF_8);            
-            
+            // test commit
+            //CommitTextToDB(conn, -1, "aaaaa", "ttttt", -1, -1);
+
             // init pdfix
             pdfix pfix = new pdfix();
             pfix.PdfInitLibrary();
