@@ -128,19 +128,9 @@ public class UploadFile extends HttpServlet {
 
                     for (int element = 0; element < count; element++) {
                         long elem_pdfix = pfix.PdfPageMapGetElement(pagemap_pdfix, element);
-                        ProcessElement(pfix, elem_pdfix, fileString, pageString, 
+                        if (!pageString.isEmpty()) pageString += " ";
+                        pageString += ProcessElement(pfix, elem_pdfix,  
                             conn, cort, fileID, pagenum, element, fileName);
-//                        long type = pfix.PdeElementGetType(elem_pdfix);
-//                        if (type == 3) {                   
-//                            String str = pfix.PdeTextGetText(elem_pdfix);
-//                            if (! str.isEmpty()) {
-//                                fileString+=str;
-//                                pageString+=str;
-//                                // fingerprint for paragraph
-//                                if (CommitToDB(conn, cort, str, fileID, pagenum, element)>0)
-//                                    CommitTextToDB( conn, fileID, fileName, str, pagenum, element);
-//                            }
-//                       }
                     }
                     
                     // fingerprint for whole page 
@@ -148,8 +138,10 @@ public class UploadFile extends HttpServlet {
                         CommitTextToDB( conn, fileID, fileName, pageString, pagenum, -1);
                     pfix.PdfPageMapRelease(pagemap_pdfix);
                     pfix.PdfPageRelease(page_pdfix);
+                    
+                    if (!fileString.isEmpty()) fileString += " ";
+                    fileString += pageString;
                 }
- 
 
                 // fingerprint for the whole file
                 if (CommitToDB(conn, cort, fileString, fileID, -1, -1) >0)
@@ -161,16 +153,17 @@ public class UploadFile extends HttpServlet {
         }
     }
     
-    void ProcessElement(pdfix pfix, long elem_pdfix, String fileString, String pageString, 
+    String ProcessElement(pdfix pfix, long elem_pdfix, 
             Connection conn, PDF_Cortical cort, int fileID, int pagenum, 
             int element, String fileName) {
+        String elem_string = "";
       long type = pfix.PdeElementGetType(elem_pdfix);
       if (type == 3) {                   
         String str = pfix.PdeTextGetText(elem_pdfix);
-        if (! str.isEmpty()) {
+        if (!str.isEmpty()) {
+            if (!elem_string.isEmpty()) elem_string += " ";
+            elem_string += str;
             try {
-                fileString+=str;
-                pageString+=str;
                 // fingerprint for paragraph
                 if (CommitToDB(conn, cort, str, fileID, pagenum, element)>0)
                     CommitTextToDB( conn, fileID, fileName, str, pagenum, element);
@@ -182,9 +175,14 @@ public class UploadFile extends HttpServlet {
       long num_childs = pfix.PdeElementGetNumChildren(elem_pdfix);
       for (int j = 0; j < num_childs; j++) {
         long elem2 = pfix.PdeElementGetChild(elem_pdfix, j);
-        ProcessElement(pfix, elem_pdfix, fileString, pageString, 
+        String str = ProcessElement(pfix, elem2,  
             conn, cort, fileID, pagenum, element, fileName);
+        if (!str.isEmpty()) {
+            if (!elem_string.isEmpty()) elem_string += " ";
+            elem_string += str;
+        }                    
       }      
+      return elem_string;
     }
 
     
