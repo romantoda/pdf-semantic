@@ -11,7 +11,7 @@ package myObjects;
  */
 public final class Settings {
   public static final String CORTICAL_API_KEY = "9a377fd0-054c-11e5-a409-7159d0ac8188";
-  public static final String DB_LINK = "jdbc:mysql://localhost:3306/PDF_Semantics?user=pdfsemantics&password=cortical.io";
+  public static final String DB_LINK = "jdbc:mysql://localhost:3306/PDF_Semantic?user=pdfsemantic&password=cortical.io";
   
   public static final String FILE_FOLDER = "D:/Transfer/Roman/PDF-Semantic-storage";
 //  public static final String TEMP_FOLDER = "/tmp";
