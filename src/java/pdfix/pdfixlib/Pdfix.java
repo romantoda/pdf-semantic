@@ -32,7 +32,7 @@ public class Pdfix extends Object {
       System.err.println("Native code library failed to load." + e);
       System.exit(1);    }
     catch (IOException ex) {
-      Logger.getLogger(pdfix.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(Pdfix.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 
