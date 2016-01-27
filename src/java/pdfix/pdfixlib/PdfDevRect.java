@@ -6,20 +6,20 @@
 
 package pdfix.pdfixlib;
 
-public class PdfRect {
-  public double left;
-  public double top;
-  public double right;
-  public double bottom;
+public class PdfDevRect {
+  public int left;
+  public int top;
+  public int right;
+  public int bottom;
 
-  public PdfRect() {
+  public PdfDevRect() {
     left = 0;
     top = 0;
     right = 0;
     bottom = 0;
   }
 
-  public PdfRect(double left_, double top_, double right_, double bottom_) {
+  public PdfDevRect(int left_, int top_, int right_, int bottom_) {
     left = left_;
     top = top_;
     right = right_;

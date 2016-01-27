@@ -113,7 +113,7 @@ public class UploadFile extends HttpServlet {
             //CommitTextToDB(conn, -1, "aaaaa", "ttttt", -1, -1);
 
             // init pdfix
-            pdfix pfix = new pdfix();
+            Pdfix pfix = new Pdfix();
             pfix.PdfInitLibrary();
             long doc_pdfix = pfix.PdfDocOpen(absoluteFileName, "");
             if (doc_pdfix != 0) {
@@ -153,7 +153,7 @@ public class UploadFile extends HttpServlet {
         }
     }
     
-    String ProcessElement(pdfix pfix, long elem_pdfix, 
+    String ProcessElement(Pdfix pfix, long elem_pdfix, 
             Connection conn, PDF_Cortical cort, int fileID, int pagenum, 
             int element, String fileName) {
         String elem_string = "";
