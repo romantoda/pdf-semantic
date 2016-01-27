@@ -165,8 +165,8 @@ public class SearchPDF extends HttpServlet {
         //        AND (D1.paragraphid=-1)
         
         sql =   "SELECT  D1.fileid, D1.pageid, D1.paragraphid, D3.fileName, D3.text, count(D1.fileid) \n" +
-                "FROM  PDF_Semantics.pdf_file_fingerprint D1, PDF_Semantics.pdf_file_fingerprint D2," + 
-                "PDF_Semantics.pdf_files D3 \n" +
+                "FROM  pdf_file_fingerprint D1, pdf_file_fingerprint D2," + 
+                "pdf_files D3 \n" +
                 "WHERE (D1.position=D2.position) \n" +
                 " AND (D2.fileid = ";
         sql+=   String.valueOf(searchParams.getSearchFileID());
@@ -196,7 +196,7 @@ public class SearchPDF extends HttpServlet {
 
         // write fingerprint for whole file
         sql =   "SELECT D1.fileid, D2.fileName, D2.text, D1.pageid, D1.paragraphid, count(D1.fileid)  \n" +
-                "FROM  PDF_Semantics.pdf_file_fingerprint D1, PDF_Semantics.pdf_files D2  \n" +
+                "FROM  pdf_file_fingerprint D1, pdf_files D2  \n" +
                 "WHERE (D1.fileid=D2.id) AND (D1.pageid=D2.pageid) AND (D1.paragraphid = D2.paragraphid) \n";
 
         //where are we searching? files,pages,paragraphs?
