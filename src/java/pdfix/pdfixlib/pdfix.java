@@ -26,13 +26,13 @@ public class Pdfix extends Object {
       else
         lib_name += ".so";
 //      System.load(path + lib_name);
-      System.load("c:\\PDFSemantic\\bin\\pdfix_jni.dll");
+      System.load("c:\\work\\sources\\pdfix\\pdfix_jni_vs\\x64\\Debug\\pdfix_jni.dll");
     }
     catch (UnsatisfiedLinkError | SecurityException | NullPointerException e) {
       System.err.println("Native code library failed to load." + e);
       System.exit(1);    }
     catch (IOException ex) {
-      Logger.getLogger(Pdfix.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(pdfix.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 
