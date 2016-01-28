@@ -52,12 +52,12 @@
     <div id="row">
         <div id="cell" style=""><% out.println(sr.getScore()); %> </div>
         <div id="cell" style=""> 
-            <a href="viewpdf.jsp?<%=simFile%>"><% out.println(fileName); %></a>    
+            <a href="viewpdf.jsp?<%=simFile%>" target="_blank"><% out.println(fileName); %> </a>    
         </div>
     </div>
 </div>
 <p class= "summary"><% out.println(sr.getText()); %> 
-   <a href="viewpdf.jsp?<%=simFile%>">More..</a> <br/>
+   <a href="viewpdf.jsp?<%=simFile%>" target="_blank">More..</a> <br/>
    <span style="font-size:120%; padding-top:2%; padding-right:2%; float:left; text-align:left;"> Similar: </span>
    <button type="button" class="button button_similar" onclick="window.location.href = 'SearchPDF?<%=simFile%>'; return true;"> Files</button>
    <button type="button" class="button button_similar" onclick="window.location.href = 'SearchPDF?<%=simPage%>'; return true;"> Pages</button>
